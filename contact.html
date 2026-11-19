@@ -8,7 +8,6 @@
 <meta name="keywords" content="Florida permit quote, permit consultation Ocala, permit consultant Marion County, Lake County permit help, Sumter County permit services, Citrus County permit, Levy County permits, The Villages permits, Leesburg permits, permit expediter contact">
 <meta name="geo.region" content="US-FL">
 <link rel="canonical" href="https://authoritypermit.com/contact.html">
-<link rel="icon" type="image/png" href="logo-crest.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -18,7 +17,6 @@
 
 <nav class="topbar">
   <a href="index.html" class="topbar-brand">
-    <img src="logo-crest.png" alt="Authority Permit LLC" class="topbar-logo">
     <div class="topbar-brand-name">Authority <span class="italic">Permit</span></div>
   </a>
   <button class="topbar-toggle" aria-label="Menu">
@@ -110,7 +108,7 @@
       </div>
     </aside>
 
-    <div class="contact-form">
+    <div class="contact-form" id="request">
       <div class="form-header">
         <div class="section-eyebrow">&mdash; Request a Quote</div>
         <h2>Tell us about your <span class="italic">project.</span></h2>
@@ -162,13 +160,21 @@
         </div>
 
         <div class="form-field">
+          <label for="request-type">How can we help?</label>
+          <select id="request-type" name="request_type">
+            <option value="Single project">One project</option>
+            <option value="Ongoing permitting">Ongoing permitting for my company</option>
+          </select>
+        </div>
+
+        <div class="form-field">
           <label for="jurisdiction">Project Jurisdiction (County / City)</label>
           <input type="text" id="jurisdiction" name="jurisdiction" placeholder="e.g. Marion County, Town of Lady Lake">
         </div>
 
         <div class="form-field">
           <label for="message">Project Details *</label>
-          <textarea id="message" name="message" rows="5" placeholder="Describe your permit needs, timeline, and any specific requirements..." required></textarea>
+          <textarea id="message" name="message" rows="5" placeholder="Tell us what you’re building or installing, when you hope to start, and whether you’ve already applied. For ongoing support, share your trades and approximate monthly permit volume." required></textarea>
         </div>
 
         <button type="submit" class="btn btn-navy btn-lg btn-full">
@@ -185,7 +191,6 @@
   <div class="footer-inner">
     <div class="footer-top">
       <div class="footer-brand-block">
-        <img src="logo-crest.png" alt="Authority Permit" class="footer-logo">
         <div class="footer-brand-name">Authority <span class="italic">Permit</span></div>
         <div class="footer-tagline">Consider it approved.</div>
         <p class="footer-desc">Florida permit consulting serving contractors, utility providers, and homeowners across all 67 counties.</p>

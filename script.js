@@ -5,6 +5,11 @@
 
 document.addEventListener('DOMContentLoaded', function() {
 
+  const requestType = document.getElementById('request-type');
+  if (requestType && new URLSearchParams(window.location.search).get('request') === 'ongoing') {
+    requestType.value = 'Ongoing permitting';
+  }
+
   // ---- Mobile nav toggle ----
   const toggle = document.querySelector('.topbar-toggle');
   const links = document.querySelector('.topbar-links');
