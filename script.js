@@ -1,75 +1,40 @@
-// ============================================================
-// AUTHORITY PERMIT — CLIENT SCRIPT
-// Mobile nav toggle + sticky sidebar scroll position tracking
-// ============================================================
+const quote = document.getElementById('quote');
 
-document.addEventListener('DOMContentLoaded', function() {
+if (quote) {
+  const query = new URLSearchParams(location.search);
+  const request = document.getElementById('request');
+  const service = document.getElementById('service');
+  const details = document.getElementById('details');
 
-  // ---- Mobile nav toggle ----
-  const toggle = document.querySelector('.topbar-toggle');
-  const links = document.querySelector('.topbar-links');
-  if (toggle && links) {
-    toggle.addEventListener('click', function() {
-      links.classList.toggle('open');
-    });
-    links.querySelectorAll('a').forEach(function(a) {
-      a.addEventListener('click', function() {
-        links.classList.remove('open');
-      });
-    });
+  const audience = document.getElementById('audience');
+  if (query.get('service') === 'owner-builder') audience.value = 'homeowner';
+  if (query.get('audience') === 'contractor') audience.value = 'contractor';
+
+  if (query.get('request') === 'ongoing') request.value = 'ongoing';
+  if (Array.from(service.options).some(option => option.value === query.get('service'))) {
+    service.value = query.get('service');
   }
 
-  // ---- Sticky sidebar scroll tracking ----
-  // For every sidebar-nav with [data-sticky-nav], watch the target sections
-  // and highlight the nav item for the section currently in view.
-  document.querySelectorAll('[data-sticky-nav]').forEach(function(navEl) {
-    const navItems = navEl.querySelectorAll('.sidebar-nav-item');
-    if (!navItems.length) return;
+  function updatePrompt() {
+    details.placeholder = request.value === 'ongoing'
+      ? 'Which trades and areas do you cover? About how many permits do you file each month?'
+      : 'What are you planning and when? Tell us if you’ve already applied.';
+  }
 
-    // Map target IDs to nav items and collect target elements
-    const targetMap = new Map();
-    const targets = [];
-    navItems.forEach(function(item) {
-      const targetId = item.getAttribute('data-target');
-      if (!targetId) return;
-      const targetEl = document.getElementById(targetId);
-      if (targetEl) {
-        targetMap.set(targetEl, item);
-        targets.push(targetEl);
-      }
+  request.addEventListener('change', updatePrompt);
+  updatePrompt();
+}
 
-      // Click to smooth-scroll to section
-      item.addEventListener('click', function() {
-        if (targetEl) {
-          const top = targetEl.getBoundingClientRect().top + window.pageYOffset - 100;
-          window.scrollTo({ top: top, behavior: 'smooth' });
-        }
-      });
-    });
+const permitStages = document.querySelector('[data-permit-stages]');
 
-    if (!targets.length) return;
+if (permitStages && 'IntersectionObserver' in window
+    && window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+  const observer = new IntersectionObserver(([entry]) => {
+    if (entry.isIntersecting) {
+      permitStages.classList.add('is-visible');
+      observer.disconnect();
+    }
+  }, { threshold: 0.25 });
 
-    // IntersectionObserver: track which section is most in view
-    const observerOptions = {
-      rootMargin: '-20% 0px -60% 0px',
-      threshold: 0
-    };
-
-    const observer = new IntersectionObserver(function(entries) {
-      entries.forEach(function(entry) {
-        const navItem = targetMap.get(entry.target);
-        if (entry.isIntersecting) {
-          // Clear active state from siblings
-          navItems.forEach(function(i) { i.classList.remove('active'); });
-          if (navItem) navItem.classList.add('active');
-        }
-      });
-    }, observerOptions);
-
-    targets.forEach(function(t) { observer.observe(t); });
-
-    // Set initial active state to first visible
-    if (navItems[0]) navItems[0].classList.add('active');
-  });
-
-});
+  observer.observe(permitStages);
+}
