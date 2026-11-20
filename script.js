@@ -25,16 +25,41 @@ if (quote) {
   updatePrompt();
 }
 
-const permitStages = document.querySelector('[data-permit-stages]');
-
-if (permitStages && 'IntersectionObserver' in window
+if ('IntersectionObserver' in window
     && window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
-  const observer = new IntersectionObserver(([entry]) => {
-    if (entry.isIntersecting) {
-      permitStages.classList.add('is-visible');
-      observer.disconnect();
+  const observer = new IntersectionObserver(entries => {
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue;
+      entry.target.classList.add('is-visible');
+      observer.unobserve(entry.target);
     }
-  }, { threshold: 0.25 });
+  }, { threshold: 0.18 });
 
-  observer.observe(permitStages);
+  document.querySelectorAll('[data-permit-stages], [data-reveal]').forEach(section => {
+    observer.observe(section);
+  });
+}
+
+const journalFilters = document.querySelector('.journal-filters');
+if (journalFilters) {
+  const posts = [...document.querySelectorAll('[data-post]')];
+  const buttons = [...journalFilters.querySelectorAll('[data-filter]')];
+  const status = document.getElementById('journal-status');
+
+  journalFilters.hidden = false;
+  journalFilters.addEventListener('click', event => {
+    const selected = event.target.closest('button[data-filter]');
+    if (!selected) return;
+
+    const category = selected.dataset.filter;
+    let count = 0;
+    for (const post of posts) {
+      post.hidden = category !== 'all' && post.dataset.post !== category;
+      if (!post.hidden) count += 1;
+    }
+    for (const button of buttons) {
+      button.setAttribute('aria-pressed', String(button === selected));
+    }
+    status.textContent = count ? `${count} ${count === 1 ? 'post' : 'posts'}` : 'No posts in this category yet.';
+  });
 }
